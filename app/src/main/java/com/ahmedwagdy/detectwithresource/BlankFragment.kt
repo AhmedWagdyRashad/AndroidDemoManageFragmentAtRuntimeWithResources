@@ -1,5 +1,6 @@
 package com.ahmedwagdy.detectwithresource
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,6 +18,8 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class BlankFragment : Fragment() {
+
+    lateinit var mListener:FragmentListener
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -55,5 +58,15 @@ class BlankFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if(context !is FragmentListener) throw AssertionError()
+        mListener = context
+    }
+
+    interface FragmentListener{
+        fun onFragmentFinish(firstName:String, lastName:String, age:Int)
     }
 }
