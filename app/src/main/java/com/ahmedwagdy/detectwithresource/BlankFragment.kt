@@ -2,10 +2,15 @@ package com.ahmedwagdy.detectwithresource
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import kotlinx.android.synthetic.main.fragment_blank.*
+import kotlinx.android.synthetic.main.fragment_blank.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -18,8 +23,12 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class BlankFragment : Fragment() {
-
+    val TAG = "MainActivity"
     lateinit var mListener:FragmentListener
+    lateinit var textFirstName:EditText
+    lateinit var textLastName:EditText
+    lateinit var textAge:EditText
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -36,8 +45,26 @@ class BlankFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_blank, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_blank, container, false)
+
+         textFirstName = rootView.text_first_name
+         textLastName = rootView.text_last_name
+         textAge = rootView.text_age
+        val doneButton = rootView.done_button
+        doneButton.setOnClickListener {
+                done()
+        }
+        return rootView
+    }
+
+    private fun done() {
+        if (mListener == null){
+            throw AssertionError()
+        }
+        var firstName = textFirstName.text.toString()
+        var lastName = textLastName.text.toString()
+        var age = Integer.valueOf(textAge.text.toString())
+       mListener.onFragmentFinish(firstName, lastName, age)
     }
 
     companion object {
@@ -62,11 +89,13 @@ class BlankFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        Log.i(TAG,"onAttach1")
         if(context !is FragmentListener) throw AssertionError()
         mListener = context
+        Log.i(TAG,"onAttach2")
     }
 
     interface FragmentListener{
-        fun onFragmentFinish(firstName:String, lastName:String, age:Int)
+        fun onFragmentFinish(firstName: String, lastName: String, age: Int)
     }
 }
