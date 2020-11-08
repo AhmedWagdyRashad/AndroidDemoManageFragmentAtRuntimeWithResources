@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.content_main.*
-import kotlinx.android.synthetic.main.fragment_blank.*
 import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainActivity : AppCompatActivity(), BlankFragment.FragmentListener {
@@ -19,6 +18,9 @@ class MainActivity : AppCompatActivity(), BlankFragment.FragmentListener {
         mTablet = (detail_fragment_container != null)
         textOut.text = "Fragment side-by-side? $mTablet"
 
+        val person = Person("Ahmed", "Wagdy", 24)
+        val bundle = Bundle()
+      //  bundle.putParcelable("person",person)
         fab.apply {
             setOnClickListener {
                 if (mTablet as Boolean) {
@@ -35,9 +37,9 @@ class MainActivity : AppCompatActivity(), BlankFragment.FragmentListener {
 
     }
 
-    override fun onFragmentFinish(firstName: String, lastName: String, age: Int) {
-        Log.i(TAG, "onFragmentFinish: " + firstName + ", "
-                + lastName + ", " + age);
+    override fun onFragmentFinish(person: Person) {
+        Log.i(TAG, "onFragmentFinish: " + person.firstName + ", "
+                + person.lastName + ", " + person.age);
         val fragment = supportFragmentManager.findFragmentById(R.id.detail_fragment_container)
         fragment?.let { supportFragmentManager.beginTransaction().remove(it).commit() }
     }

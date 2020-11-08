@@ -7,9 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_blank.*
 import kotlinx.android.synthetic.main.fragment_blank.view.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -61,10 +59,11 @@ class BlankFragment : Fragment() {
         if (mListener == null){
             throw AssertionError()
         }
-        var firstName = textFirstName.text.toString()
-        var lastName = textLastName.text.toString()
-        var age = Integer.valueOf(textAge.text.toString())
-       mListener.onFragmentFinish(firstName, lastName, age)
+        val firstName = textFirstName.text.toString()
+        val lastName = textLastName.text.toString()
+        val age = Integer.valueOf(textAge.text.toString())
+        val person = Person(firstName, lastName, age)
+       mListener.onFragmentFinish(person)
     }
 
     companion object {
@@ -96,6 +95,6 @@ class BlankFragment : Fragment() {
     }
 
     interface FragmentListener{
-        fun onFragmentFinish(firstName: String, lastName: String, age: Int)
+        fun onFragmentFinish(person:Person)
     }
 }
