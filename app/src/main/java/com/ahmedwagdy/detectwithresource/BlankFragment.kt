@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_blank.view.*
 
@@ -45,9 +46,14 @@ class BlankFragment : Fragment() {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_blank, container, false)
 
-         textFirstName = rootView.text_first_name
-         textLastName = rootView.text_last_name
-         textAge = rootView.text_age
+        textFirstName = rootView.text_first_name
+        textLastName = rootView.text_last_name
+        textAge = rootView.text_age
+        val person: Person? = arguments?.getParcelable("PERSON_KEY")
+        textFirstName.setText(person?.firstName)
+        textLastName.setText(person?.lastName)
+        textAge.setText(person?.age.toString())
+
         val doneButton = rootView.done_button
         doneButton.setOnClickListener {
                 done()
@@ -84,6 +90,14 @@ class BlankFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+
+        fun newInstance(person:Person) : BlankFragment{
+            val bundle = Bundle()
+            bundle.putParcelable("PERSON_KEY",person)
+            val fragment = BlankFragment()
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 
     override fun onAttach(context: Context) {

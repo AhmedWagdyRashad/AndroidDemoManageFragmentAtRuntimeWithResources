@@ -18,14 +18,15 @@ class MainActivity : AppCompatActivity(), BlankFragment.FragmentListener {
         mTablet = (detail_fragment_container != null)
         textOut.text = "Fragment side-by-side? $mTablet"
 
-        val person = Person("Ahmed", "Wagdy", 24)
+        val person = Person("first name", "last name", 35)
         val bundle = Bundle()
-      //  bundle.putParcelable("person",person)
+        bundle.putParcelable("person",person)
         fab.apply {
             setOnClickListener {
                 if (mTablet as Boolean) {
+                    val blankFragment = BlankFragment.newInstance(person)
                     supportFragmentManager.beginTransaction()
-                        .add(R.id.detail_fragment_container, BlankFragment())
+                        .add(R.id.detail_fragment_container, blankFragment)
                         .commit()
                 } else {
                     val intent = Intent(context, DetailActivity::class.java)

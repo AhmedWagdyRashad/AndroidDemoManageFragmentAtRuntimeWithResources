@@ -10,7 +10,7 @@ class DetailActivity : AppCompatActivity(),BlankFragment.FragmentListener {
         setContentView(R.layout.activity_detail)
     }
 
-    override fun onFragmentFinish(firstName: String, lastName: String, age: Int) {
+    override fun onFragmentFinish(peron:Person) {
         Log.i("MainActivity", "detailActivity")
     }
 }
