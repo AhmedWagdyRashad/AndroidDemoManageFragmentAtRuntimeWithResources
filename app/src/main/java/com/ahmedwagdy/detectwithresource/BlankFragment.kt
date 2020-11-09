@@ -7,9 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_blank.*
 import kotlinx.android.synthetic.main.fragment_blank.view.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -23,11 +21,12 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class BlankFragment : Fragment() {
-    val TAG = "MainActivity"
-    lateinit var mListener:FragmentListener
-    lateinit var textFirstName:EditText
-    lateinit var textLastName:EditText
-    lateinit var textAge:EditText
+    val TAG = "Fragment"
+    lateinit var mListener: FragmentListener
+    lateinit var textFirstName: EditText
+    lateinit var textLastName: EditText
+    lateinit var textAge: EditText
+    private var person: Person? = null
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -47,24 +46,31 @@ class BlankFragment : Fragment() {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_blank, container, false)
 
-         textFirstName = rootView.text_first_name
-         textLastName = rootView.text_last_name
-         textAge = rootView.text_age
+        textFirstName = rootView.text_first_name
+        textLastName = rootView.text_last_name
+        textAge = rootView.text_age
+
+        person = arguments?.getParcelable("PERSON_KEY")
+        if (person != null)
+            setViews(person!!)
+
         val doneButton = rootView.done_button
         doneButton.setOnClickListener {
-                done()
+            done()
         }
         return rootView
     }
 
     private fun done() {
-        if (mListener == null){
-            throw AssertionError()
-        }
-        var firstName = textFirstName.text.toString()
-        var lastName = textLastName.text.toString()
-        var age = Integer.valueOf(textAge.text.toString())
-       mListener.onFragmentFinish(firstName, lastName, age)
+        //this condition is always false
+        /*  if (mListener == null){
+              throw AssertionError()
+          }*/
+        val firstName = textFirstName.text.toString()
+        val lastName = textLastName.text.toString()
+        val age = Integer.valueOf(textAge.text.toString())
+        val person = Person(firstName, lastName, age)
+        mListener.onFragmentFinish(person)
     }
 
     companion object {
@@ -85,17 +91,45 @@ class BlankFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+
+        fun newInstance(person: Person): BlankFragment {
+            val bundle = Bundle()
+            bundle.putParcelable("PERSON_KEY", person)
+            val fragment = BlankFragment()
+            fragment.arguments = bundle
+            return fragment
+        }
+
     }
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.i(TAG,"onAttach1")
-        if(context !is FragmentListener) throw AssertionError()
+        Log.i(TAG, "onAttach1")
+        if (context !is FragmentListener) throw AssertionError()
         mListener = context
-        Log.i(TAG,"onAttach2")
+        Log.i(TAG, "onAttach2")
     }
 
-    interface FragmentListener{
-        fun onFragmentFinish(firstName: String, lastName: String, age: Int)
+    private fun setViews(person: Person) {
+        textFirstName.setText(person.firstName)
+        textLastName.setText(person.lastName)
+        textAge.setText(person.age.toString())
+    }
+
+    interface FragmentListener {
+        fun onFragmentFinish(person: Person)
+        fun getActivityData(): Person {
+            return Person("", "", 0)
+        }
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (person == null)
+            person = mListener.getActivityData()
+        if (person != null)
+            setViews(person!!)
     }
 }
