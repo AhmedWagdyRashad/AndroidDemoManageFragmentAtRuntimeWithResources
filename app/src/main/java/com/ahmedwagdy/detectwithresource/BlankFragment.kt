@@ -22,7 +22,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class BlankFragment : Fragment() {
-    val TAG = "MainActivity"
+    val TAG = "Fragment"
     lateinit var mListener:FragmentListener
     lateinit var textFirstName:EditText
     lateinit var textLastName:EditText
@@ -31,6 +31,7 @@ class BlankFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private  var person: Person? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,10 +50,10 @@ class BlankFragment : Fragment() {
         textFirstName = rootView.text_first_name
         textLastName = rootView.text_last_name
         textAge = rootView.text_age
-        val person: Person? = arguments?.getParcelable("PERSON_KEY")
-        textFirstName.setText(person?.firstName)
-        textLastName.setText(person?.lastName)
-        textAge.setText(person?.age.toString())
+
+         person = arguments?.getParcelable("PERSON_KEY")
+        if (person!=null)
+            setViews(person!!)
 
         val doneButton = rootView.done_button
         doneButton.setOnClickListener {
@@ -62,9 +63,10 @@ class BlankFragment : Fragment() {
     }
 
     private fun done() {
-        if (mListener == null){
+        //this condition is always false
+      /*  if (mListener == null){
             throw AssertionError()
-        }
+        }*/
         val firstName = textFirstName.text.toString()
         val lastName = textLastName.text.toString()
         val age = Integer.valueOf(textAge.text.toString())
@@ -98,7 +100,9 @@ class BlankFragment : Fragment() {
             fragment.arguments = bundle
             return fragment
         }
+
     }
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -108,7 +112,25 @@ class BlankFragment : Fragment() {
         Log.i(TAG,"onAttach2")
     }
 
+    private fun setViews(person: Person){
+        textFirstName.setText(person.firstName)
+        textLastName.setText(person.lastName)
+        textAge.setText(person.age.toString())
+    }
+
     interface FragmentListener{
         fun onFragmentFinish(person:Person)
+        fun getActivityData():Person{
+            return Person("","",0)
+        }
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (person!=null){
+            person = mListener.getActivityData()
+            setViews(person!!)
+        }
     }
 }

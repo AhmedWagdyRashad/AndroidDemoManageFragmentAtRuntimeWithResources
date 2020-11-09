@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainActivity : AppCompatActivity(), BlankFragment.FragmentListener {
     private var mTablet:Boolean? = null
-    private val TAG = "MainActivity"
+    private val TAG = "Fragment"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity(), BlankFragment.FragmentListener {
         val person = Person("first name", "last name", 35)
         val bundle = Bundle()
         bundle.putParcelable("person",person)
+
         fab.apply {
             setOnClickListener {
                 if (mTablet as Boolean) {
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity(), BlankFragment.FragmentListener {
                         .commit()
                 } else {
                     val intent = Intent(context, DetailActivity::class.java)
+                    intent.putExtras(bundle)
                     startActivity(intent)
                 }
             }
@@ -39,7 +41,7 @@ class MainActivity : AppCompatActivity(), BlankFragment.FragmentListener {
     }
 
     override fun onFragmentFinish(person: Person) {
-        Log.i(TAG, "onFragmentFinish: " + person.firstName + ", "
+        Log.i(TAG, "MainActivity_onFragmentFinish: " + person.firstName + ", "
                 + person.lastName + ", " + person.age);
         val fragment = supportFragmentManager.findFragmentById(R.id.detail_fragment_container)
         fragment?.let { supportFragmentManager.beginTransaction().remove(it).commit() }
